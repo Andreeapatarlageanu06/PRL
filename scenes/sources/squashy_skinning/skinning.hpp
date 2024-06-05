@@ -129,7 +129,7 @@ struct gui_parameters
     float wave_noise_max_amplitude = 0.3f;
     float wave_pump_noise_roll_amplitude = 0.7f;
 
-    bool oscillation_filter_speedup = false;
+    bool oscillation_filter_speedup = true;
     //********************************************************
     int typeOscillation = 1;
     //********************************************************

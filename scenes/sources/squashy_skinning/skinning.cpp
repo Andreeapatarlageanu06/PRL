@@ -500,7 +500,8 @@ void scene_model::velocity_skinning(float magnitude)
         
 
         if (joint != 0) {
-            quaternion R_parent = skeleton_current[joint].r;
+            int parent_id=skeleton.connectivity[joint].parent;
+            quaternion R_parent = skeleton_current[parent_id].r;
             angular_speed = R_parent.matrix() * angular_speed;
         }
 
@@ -3998,7 +3999,7 @@ vec3 max_joint_filtered_value::evaluateTriangular(float t_current) const
     float halfPeriod = period / 2.0f;
     float remainder = std::fmod(t, period);
     float phase = remainder / halfPeriod;
-    float filter = evaluate_damping(t_current) * ((phase < 1.0f) ? (2.0f * phase - 1.0f) : (3.0f - 2.0f * phase));
+    float filter = evaluate_damping(t_current) * ((phase < 1.0f) ? -(2.0f * phase - 1.0f) : -(3.0f - 2.0f * phase));
     return filter * value; 
 
     /*float phase = std::fmod(u, 2 * 3.14159f);
