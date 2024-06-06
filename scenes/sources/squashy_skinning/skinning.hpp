@@ -69,7 +69,7 @@ struct oscillation_gui_structure
     float magnitude = 0.3f;
     float attenuation = 1.0f;
 
-    float frequency_slope = 2*3.14f*1.5f;
+    float frequency_slope = 0;//2*3.14f*1.5f;
 };
 
 enum gui_parameters_display_type {display_sphere, display_character, display_cylinder_bending, display_cylinder_translate, display_rondinella, display_bar,

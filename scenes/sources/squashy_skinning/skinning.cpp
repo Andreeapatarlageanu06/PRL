@@ -1928,12 +1928,12 @@ void scene_model::set_gui()
             ImGui::RadioButton("Speedup filter pendulum", &gui_param.typeOscillation, 4);
             ImGui::RadioButton("Speedup filter Bip-Bip", &gui_param.typeOscillation, 5);
             //*********************************************************************************************
-            ImGui::SliderFloat("Oscillation Frequency Base", &gui_param.oscillation_gui.frequency, 2 * 3.14f * 0.5, 2 * 3.14f * 6);
+            ImGui::SliderFloat("Oscillation Frequency Base", &gui_param.oscillation_gui.frequency, 0.2f, 3.0f);
             ImGui::SliderFloat("Oscillation Frequency Increase Slope", &gui_param.oscillation_gui.frequency_slope, 0.0f, 2*3.14f*1.5f*2);
 
 
             ImGui::SliderFloat("Oscillation Damping", &gui_param.oscillation_gui.attenuation, 0.5f, 3.0f);
-            ImGui::SliderFloat("Oscillation Magnitude", &gui_param.oscillation_gui.magnitude, 0.0f, 1.5f, "%.4f", 2.0f);
+            ImGui::SliderFloat("Oscillation Magnitude", &gui_param.oscillation_gui.magnitude, 0.0f, 2.5f, "%.4f", 2.0f);
 
 
             max_joint_filtered_value::attenuation = gui_param.oscillation_gui.attenuation;
@@ -3983,8 +3983,7 @@ vec3 max_joint_filtered_value::evaluateSinusoidal(float t_current) const   //AIC
     float t = t_current - t0;
 
     //SINUSOIDAL WAVE  --DONE
-
-    float filter = evaluate_damping(t_current) * std::cos((frequency + frequency_slope * sqrt(t)) * t);
+    float filter = evaluate_damping(t_current) * std::cos(2*3.14f*frequency*t);//(frequency + frequency_slope * sqrt(t)) * t);
     return filter * value; 
 
 }
@@ -4045,7 +4044,8 @@ vec3 max_joint_filtered_value::evaluatePendulum(float t_current) const
     float dt = 0.017f;
     float k = t / dt;
     float constant = -attenuation * k * dt;
-    float result = evaluate_damping(t_current) * (std::cos(frequency * t * 2.0f * 3.14159f) + std::cos(3 * (frequency * t * 2.0f * 3.14159f)) / 9.0f);
+    float tt = std::sin(frequency * t * 2.0f * 3.14159f+3.14/2.0f) + std::sin(3 * (frequency * t * 2.0f * 3.14159f+3.14/2.0f)) / 9.0f - std::sin(5 * (frequency * t * 2.0f * 3.14159f+3.14f/2.0f)) / 25.0f- std::sin(7 * (frequency * t * 2.0f * 3.14159f+3.14f/2.0f)) / 49.0f+ std::sin(9 * (frequency * t * 2.0f * 3.14159f+3.14f/2.0f)) / 81.0f;
+    float result = evaluate_damping(t_current) * tt; //(tt>0?1.0f:-1.0f)*std::pow(std::abs(tt),0.6f);
     return result * value;
 
     /*float period = 1.0 / frequency;
